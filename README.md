@@ -1,10 +1,10 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/edingc/powervault_me5_exporter/total)
 [![codecov](https://codecov.io/gh/edingc/powervault_me5_exporter/branch/main/graph/badge.svg)](https://codecov.io/gh/edingc/powervault_me5_exporter)
-[![Go Report Card](https://goreportcard.com/badge/github.com/edingc/powervault_me5_exporter)][goreportcard]
+[![Go Report Card](https://goreportcard.com/badge/github.com/edingc/powervault_me5_exporter)]
 
 # Dell PowerVault ME5 Prometheus Exporter
 
-s, heavily influenced by the patterns of the offical [node_exporter](https://github.com/prometheus/node_exporter/).
+A Prometheus exporter for the Dell PowerVault ME5 series REST API, heavily influenced by the patterns of the offical [node_exporter](https://github.com/prometheus/node_exporter/).
 
 ## AI Disclaimer
 
