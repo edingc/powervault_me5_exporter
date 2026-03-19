@@ -20,10 +20,12 @@ import (
 	"github.com/prometheus/client_golang/prometheus"
 )
 
+// Create a structure to handle the metrics
 type alertDescs struct {
 	bySeverity *prometheus.Desc
 }
 
+// Create the prometheus alert description
 func newAlertDescs(label func(string, string, string, ...string) *prometheus.Desc) alertDescs {
 	return alertDescs{
 		bySeverity: label("alerts", "by_severity", "Number of alerts by severity, resolved and acknowledged state.", "severity", "resolved", "acknowledged"),
@@ -34,6 +36,7 @@ func (d alertDescs) describe(ch chan<- *prometheus.Desc) {
 	ch <- d.bySeverity
 }
 
+// Collect API results and process
 func (c *ME5Collector) CollectAlerts(ctx context.Context, ch chan<- prometheus.Metric) error {
 	var resp struct {
 		Alerts []struct {
@@ -48,7 +51,7 @@ func (c *ME5Collector) CollectAlerts(ctx context.Context, ch chan<- prometheus.M
 		return err
 	}
 
-	// Instead of returning individual alerts, return sum of different alert states as metric.
+	// Instead of returning individual alerts, return sum of different alert states as metric
 	type key struct{ severity, resolved, acknowledged string }
 	counts := make(map[key]float64)
 
