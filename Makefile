@@ -14,7 +14,7 @@ LDFLAGS := \
   -X github.com/prometheus/common/version.Branch=$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown") \
   -w -s
 
-.PHONY: all build test lint fmt vet clean docker-build docker-push help
+.PHONY: all build test lint fmt vet clean docker-build help
 
 all: build
 
