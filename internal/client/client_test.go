@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-// loginOK writes a successful ME5 login response with the given session key.
+// loginOK writes a successful ME5 login response with the given session key
 func loginOK(w http.ResponseWriter, key string) {
 	json.NewEncoder(w).Encode(struct {
 		Status []struct {
@@ -41,7 +41,7 @@ func loginOK(w http.ResponseWriter, key string) {
 	})
 }
 
-// loginFail writes a failed ME5 login response.
+// loginFail writes a failed ME5 login response
 func loginFail(w http.ResponseWriter) {
 	json.NewEncoder(w).Encode(struct {
 		Status []struct {
@@ -56,8 +56,8 @@ func loginFail(w http.ResponseWriter) {
 	})
 }
 
-// newTLSClient starts a TLS test server and returns a matching ME5Client.
-// The client is configured with insecureSkipVerify so it trusts the test cert.
+// newTLSClient starts a TLS test server and returns a matching ME5Client
+// The client is configured with insecureSkipVerify so it trusts the test cert
 func newTLSClient(t *testing.T, handler http.Handler) (*httptest.Server, *ME5Client) {
 	t.Helper()
 	ts := httptest.NewTLSServer(handler)
@@ -67,8 +67,8 @@ func newTLSClient(t *testing.T, handler http.Handler) (*httptest.Server, *ME5Cli
 	return ts, c
 }
 
+// Verify the username_password concatenation format and SHA-256 encoding
 func TestHashCredentials(t *testing.T) {
-	// Verify the username_password concatenation format and SHA-256 encoding.
 	h := sha256.New()
 	h.Write([]byte("user_pass"))
 	want := fmt.Sprintf("%x", h.Sum(nil))
@@ -78,6 +78,7 @@ func TestHashCredentials(t *testing.T) {
 	}
 }
 
+// Test ability to get API
 func TestGet_Success(t *testing.T) {
 	const sessionKey = "test-session-key"
 	type payload struct{ Value string }
@@ -109,6 +110,7 @@ func TestGet_Success(t *testing.T) {
 	}
 }
 
+// Test login failure
 func TestGet_LoginFails(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/login/", func(w http.ResponseWriter, r *http.Request) {
@@ -122,6 +124,7 @@ func TestGet_LoginFails(t *testing.T) {
 	}
 }
 
+// Test non-200 response
 func TestGet_Non200(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/login/", func(w http.ResponseWriter, r *http.Request) {
@@ -138,6 +141,7 @@ func TestGet_Non200(t *testing.T) {
 	}
 }
 
+// Test session reuse
 func TestGet_SessionReuse(t *testing.T) {
 	var loginCalls atomic.Int32
 
@@ -163,6 +167,7 @@ func TestGet_SessionReuse(t *testing.T) {
 	}
 }
 
+// Test 401
 func TestGet_401Retry(t *testing.T) {
 	var dataCalls atomic.Int32
 
@@ -193,6 +198,7 @@ func TestGet_401Retry(t *testing.T) {
 	}
 }
 
+// Test invalid host
 func TestLogin_BuildRequestError(t *testing.T) {
 	// A null byte in the host makes url.Parse fail inside http.NewRequestWithContext.
 	c := NewME5Client("host\x00", "user", "pass", time.Second, true)
@@ -201,6 +207,7 @@ func TestLogin_BuildRequestError(t *testing.T) {
 	}
 }
 
+// Test login error
 func TestLogin_NetworkError(t *testing.T) {
 	// Nothing is listening on localhost:1; the TCP connection is refused immediately.
 	c := NewME5Client("localhost:1", "user", "pass", time.Second, true)
@@ -209,6 +216,7 @@ func TestLogin_NetworkError(t *testing.T) {
 	}
 }
 
+// Test JSON decoding failure
 func TestLogin_JSONDecodeError(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/login/", func(w http.ResponseWriter, r *http.Request) {
@@ -221,6 +229,7 @@ func TestLogin_JSONDecodeError(t *testing.T) {
 	}
 }
 
+// Test bad URL
 func TestGet_BuildRequestError(t *testing.T) {
 	// A newline in the path makes url.Parse fail inside http.NewRequestWithContext.
 	c := NewME5Client("localhost:9999", "user", "pass", time.Second, true)
@@ -232,6 +241,7 @@ func TestGet_BuildRequestError(t *testing.T) {
 	}
 }
 
+// Test generic network error
 func TestGet_NetworkError(t *testing.T) {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/api/login/", func(w http.ResponseWriter, r *http.Request) {
@@ -250,6 +260,7 @@ func TestGet_NetworkError(t *testing.T) {
 	}
 }
 
+// Test 401 error
 func TestGet_401NoInfiniteRetry(t *testing.T) {
 	var dataCalls atomic.Int32
 

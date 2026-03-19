@@ -26,7 +26,7 @@ import (
 	"time"
 )
 
-// ME5Client handles authenticated communication with the Dell PowerVault ME5 REST API.
+// ME5Client handles authenticated communication with the Dell PowerVault ME5 REST API
 type ME5Client struct {
 	host       string
 	httpClient *http.Client
@@ -38,7 +38,7 @@ type ME5Client struct {
 	sessionKey string
 }
 
-// NewME5Client creates a new ME5 API client.
+// NewME5Client creates a new ME5 API client
 func NewME5Client(host, username, password string, timeout time.Duration, insecureSkipVerify bool) *ME5Client {
 	return &ME5Client{
 		host:     host,
@@ -57,6 +57,7 @@ func (c *ME5Client) baseURL() string {
 	return fmt.Sprintf("https://%s/api", c.host)
 }
 
+// Generate SHA256 hashed credentials for API
 func hashCredentials(username, password string) string {
 	h := sha256.New()
 
@@ -67,7 +68,7 @@ func hashCredentials(username, password string) string {
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
-// login authenticates against the ME5 API and stores the session key.
+// Login authenticates against the ME5 API and stores the session key
 func (c *ME5Client) login(ctx context.Context) error {
 	loginURL := fmt.Sprintf("%s/login/%s", c.baseURL(), hashCredentials(c.username, c.password))
 
@@ -97,7 +98,7 @@ func (c *ME5Client) login(ctx context.Context) error {
 	for _, s := range body.Status {
 		if s.ResponseTypeNumeric == 0 { // 0 = success
 			c.sessionKey = s.Response
-			// Sessions expire after 30 min; we expire locally at 25 min to be safe.
+			// Sessions expire after 30 min; we expire locally at 25 min to be safe
 			c.sessionExp = time.Now().Add(25 * time.Minute)
 			return nil
 		}
@@ -105,7 +106,7 @@ func (c *ME5Client) login(ctx context.Context) error {
 	return fmt.Errorf("login failed: %+v", body.Status)
 }
 
-// ensureSession returns a valid session key, logging in first if necessary.
+// ensureSession returns a valid session key, logging in first if necessary
 func (c *ME5Client) ensureSession(ctx context.Context) (string, error) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
@@ -118,8 +119,8 @@ func (c *ME5Client) ensureSession(ctx context.Context) (string, error) {
 	return c.sessionKey, nil
 }
 
-// Get performs an authenticated GET against the given ME5 API path.
-// It will re-authenticate and retry once on 401 Unauthorized status.
+// Get performs an authenticated GET against the given ME5 API path
+// It will re-authenticate and retry once on 401 Unauthorized status
 func (c *ME5Client) Get(ctx context.Context, path string, dest any) error {
 	return c.get(ctx, path, dest, false)
 }
