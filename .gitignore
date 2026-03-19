@@ -1,6 +1,5 @@
 # Binaries
-/powervault_me5_exporter
-/powervault_me5_exporter-*
+/prometheus-powervault-me5-exporter
 *.exe
 *.exe~
 *.dll
