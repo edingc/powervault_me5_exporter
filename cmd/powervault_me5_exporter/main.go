@@ -29,8 +29,6 @@ import (
 	"time"
 
 	"github.com/alecthomas/kingpin/v2"
-	"github.com/edingc/powervault_me5_exporter/internal/client"
-	"github.com/edingc/powervault_me5_exporter/internal/collector"
 	"github.com/prometheus/client_golang/prometheus"
 	promcollectors "github.com/prometheus/client_golang/prometheus/collectors"
 	versioncollector "github.com/prometheus/client_golang/prometheus/collectors/version"
@@ -40,6 +38,9 @@ import (
 	"github.com/prometheus/common/version"
 	"github.com/prometheus/exporter-toolkit/web"
 	"github.com/prometheus/exporter-toolkit/web/kingpinflag"
+
+	"github.com/edingc/powervault_me5_exporter/internal/client"
+	"github.com/edingc/powervault_me5_exporter/internal/collector"
 )
 
 var (
@@ -179,5 +180,8 @@ func main() {
 	logger.Info("Shutting down gracefully")
 	shutdownCtx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
-	srv.Shutdown(shutdownCtx)
+
+	if err := srv.Shutdown(shutdownCtx); err != nil {
+		logger.Error("Error during server shutdown", "err", err)
+	}
 }
