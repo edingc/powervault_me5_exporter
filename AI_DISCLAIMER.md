@@ -8,4 +8,4 @@ Most of the AI use went toward eliminating repetitive boilerplate. For example, 
 
 There were numerous models involved in the process, as I often found it best to "rubber duck" ideas against multiple models and myself to find a good solution.
 
-To be clear, while I have exposure to and experience with programming, I am _not_ a programmer. That highlight's the biggest win of this project: something that would have taken weeks of solid development was up and functional in just a few days.
+To be clear, while I have exposure to and experience with programming, I am _not_ a programmer. That highlights the biggest win of this project: something that would have taken weeks of solid development was up and functional in just a few days.
