@@ -4,7 +4,7 @@
 
 # Dell PowerVault ME5 Prometheus Exporter
 
-A Prometheus exporter for the Dell PowerVault ME5 series REST API, heavily influenced by the patterns of the offical [node_exporter](https://github.com/prometheus/node_exporter/).
+s, heavily influenced by the patterns of the offical [node_exporter](https://github.com/prometheus/node_exporter/).
 
 ## AI Disclaimer
 
@@ -18,7 +18,7 @@ The example systemd files are based on Debian Prometheus conventions, and assume
 
 ## Usage
 
-The exporter must run from a system with access to the PowerVault controller web interface/API.
+The exporter must run from a system with access to the PowerVault controller web interface/API. A PowerVault system user with "monitor" privileges should be used. To create such a user, reference the [PowerVault documentation](https://www.dell.com/support/manuals/en-us/powervault-me5084/me5_series_ag/managing-local-users?guid=guid-45c5c9f8-adca-4225-9440-9c03dfae62ce&lang=en-us).
 
 Configure the systemd files as required, or run the binary with the minimum required options for connecting to a PowerVault controller with a self-signed certificate:
 
