@@ -57,10 +57,13 @@ func (c *ME5Client) baseURL() string {
 	return fmt.Sprintf("https://%s/api", c.host)
 }
 
-// hashCredentials handles the specific ME5 requirement for a SHA-256 digest.
 func hashCredentials(username, password string) string {
 	h := sha256.New()
-	h.Write([]byte(fmt.Sprintf("%s_%s", username, password)))
+
+	h.Write([]byte(username))
+	h.Write([]byte("_"))
+	h.Write([]byte(password))
+
 	return fmt.Sprintf("%x", h.Sum(nil))
 }
 
