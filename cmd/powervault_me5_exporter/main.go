@@ -57,7 +57,7 @@ var (
 )
 
 func main() {
-	// Consolidate collector flag logic
+	// Sets default collector flags
 	collectorFlags := make(map[string]*bool)
 	for name, enabledByDefault := range collector.AllCollectors {
 		collectorFlags[name] = kingpin.Flag(
@@ -75,6 +75,7 @@ func main() {
 	logger := promslog.New(promslogConfig)
 	logger.Info("Starting powervault_me5_exporter", "version", version.Info())
 
+	// We need a host set, and credentials for said host
 	if *me5Host == "" {
 		logger.Error("--me5.host is required")
 		os.Exit(1)
@@ -85,10 +86,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	// There's no reason to run this as root
 	if u, err := user.Current(); err == nil && u.Uid == "0" {
 		logger.Warn("Running as root is not required and discouraged.")
 	}
 
+	// Initiate a new ME5 API client
 	c := client.NewME5Client(*me5Host, *me5User, *me5Password, *timeout, *insecureSkipVerify)
 
 	enabled := make(map[string]bool)
@@ -105,23 +108,21 @@ func main() {
 	reg := prometheus.NewRegistry()
 	reg.MustRegister(versioncollector.NewCollector("powervault_me5_exporter"))
 	reg.MustRegister(collector.NewME5Collector(c, enabled))
-	// https://github.com/prometheus/node_exporter/pull/3513/changes
-	// Use a dedicated ServeMux to have explicit control over exposed routes.
-	// Dependencies might register routes on DefaultServeMux. Be sure to check them.
-	// (e.g. [net/http/pprof](https://pkg.go.dev/net/http/pprof) registers debug endpoints there via init()).
+
 	// Avoids accidentally serving handlers that dependencies might register on DefaultServeMux.
+	// This is used to stop pprof from registering by default.
+	// https://github.com/prometheus/node_exporter/pull/3513/changes
+
 	mux := http.NewServeMux()
 
-	// Endpoints
+	// Health Endpoint
 	mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 		w.Write([]byte(`{"status":"ok"}`))
 	})
 
-	// Go runtime profiling endpoints for CPU, memory, and goroutine analysis.
-	// These would normally be registered on DefaultServeMux by importing net/http/pprof,
-	// but we register them explicitly on our mux for controlled exposure.
-	// See [net/http/pprof package docs](https://pkg.go.dev/net/http/pprof) for more details.
+	// pprof Endpoints
+	// These would normally be registered on DefaultServeMux by importing net/http/pprof
 	if *enablePprof {
 		mux.HandleFunc("/debug/pprof/", pprof.Index)
 		mux.HandleFunc("/debug/pprof/cmdline", pprof.Cmdline)
@@ -130,7 +131,7 @@ func main() {
 		mux.HandleFunc("/debug/pprof/trace", pprof.Trace)
 	}
 
-	// Metrics Handler with context timeout integration
+	// Metrics Handler/Endpoint
 	opts := promhttp.HandlerOpts{
 		ErrorLog:            slog.NewLogLogger(logger.Handler(), slog.LevelError),
 		ErrorHandling:       promhttp.ContinueOnError,
@@ -160,7 +161,8 @@ func main() {
 			{Address: *metricsPath, Text: "Metrics"},
 			{Address: "/health", Text: "Health"},
 		},
-		Profiling: fmt.Sprintf("%t", *enablePprof), // Display profiling links on landing page only if endpoint is enabled
+		// Display profiling links on landing page only if endpoint is enabled
+		Profiling: fmt.Sprintf("%t", *enablePprof),
 	}
 	landingPage, _ := web.NewLandingPage(landingConfig)
 	mux.Handle("/", landingPage)
