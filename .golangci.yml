@@ -5,7 +5,7 @@ linters:
     - revive
   settings:
     errcheck:
-      # Used in HTTP handlers, any error is handled by the server itself.
+      # Used in HTTP handlers, any error is handled by the server itself
       exclude-functions:
         - (net/http.ResponseWriter).Write
     revive:
