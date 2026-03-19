@@ -1,6 +1,7 @@
 BINARY      := prometheus-powervault-me5-exporter
 MODULE      := github.com/edingc/powervault_me5_exporter
 IMAGE       := powervault-me5-exporter
+GOLANG_CROSS_VERSION ?= v1.25.7
 
 # Inject version info at build time
 VERSION     ?= $(shell cat VERSION || echo "dev")
@@ -53,6 +54,12 @@ docker-build:
 	  -t $(IMAGE):$(VERSION) \
 	  -t $(IMAGE):latest \
 	  .
+
+release:
+	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
+	--env-file .release-env -v `pwd`:/work -w /work \
+	ghcr.io/goreleaser/goreleaser-cross:$(GOLANG_CROSS_VERSION) \
+	release --clean
 
 ## help: show this help
 help:

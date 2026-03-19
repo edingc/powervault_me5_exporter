@@ -2,35 +2,35 @@ name: Release
 
 on:
   push:
-    tags: ["v*"]
+    branches:
+      - main
+    tags:
+      - 'v*'
 
 jobs:
   release:
-    name: Release
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
+    name: Create Release
     steps:
-      - uses: actions/checkout@v4
+
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
         with:
           fetch-depth: 0
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set version
+        run: echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+
+      - name: Setup Go
+        uses: actions/setup-go@v6.3.0
         with:
           go-version-file: go.mod
 
-      - name: Install promu
-        run: go install github.com/prometheus/promu@latest
+      - name: Refresh Go Report Card
+        uses: creekorful/goreportcard-action@v1.0
 
-      - name: Build release binaries
-        run: promu crossbuild
-
-      - name: Create tarballs
-        run: promu tarball --parallelism 2 $(ls -d .build/*)
-
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        with:
-          files: "*.tar.gz"
-          generate_release_notes: true
+      - name: Setup release environment
+        run: echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
+        
+      - name: Run GoReleaser
+        run: make release
