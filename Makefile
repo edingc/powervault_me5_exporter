@@ -3,7 +3,7 @@ MODULE      := github.com/edingc/powervault_me5_exporter
 IMAGE       := powervault-me5-exporter
 
 # Inject version info at build time
-VERSION     ?= $(shell git describe --tags --always --dirty 2>/dev/null || echo "dev")
+VERSION     ?= $(shell cat VERSION || echo "dev")
 COMMIT      ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE  ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
