@@ -1,6 +1,6 @@
 ![GitHub All Releases](https://img.shields.io/github/downloads/edingc/powervault_me5_exporter/total)
 [![codecov](https://codecov.io/gh/edingc/powervault_me5_exporter/branch/main/graph/badge.svg)](https://codecov.io/gh/edingc/powervault_me5_exporter)
-[![Go Report Card](https://goreportcard.com/badge/github.com/edingc/powervault_me5_exporter)]
+[![Go Report Card](https://goreportcard.com/badge/github.com/edingc/powervault_me5_exporter)](https://goreportcard.com/report/github.com/edingc/powervault_me5_exporter)
 
 # Dell PowerVault ME5 Prometheus Exporter
 
