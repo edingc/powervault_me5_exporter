@@ -21,7 +21,7 @@ jobs:
             version=$ref
           fi
           echo "VERSION=${version}" >> $GITHUB_ENV
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: docker/setup-qemu-action@v3
       - uses: docker/setup-buildx-action@v3
       - name: Login to DockerHub
