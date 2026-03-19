@@ -25,9 +25,13 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
 # final stage 
 FROM alpine:3.23
 
-RUN apk --no-cache add ca-certificates gcompat
+RUN apk --no-cache add ca-certificates gcompat && \
+    addgroup -S prometheus && \
+    adduser -S prometheus -G prometheus
 
 COPY --from=builder /prometheus-powervault-me5-exporter /prometheus-powervault-me5-exporter
+
+USER prometheus
 
 EXPOSE 9850
 
