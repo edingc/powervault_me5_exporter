@@ -1,0 +1,28 @@
+version: "2"
+
+linters:
+  default: none
+  enable:
+    - errcheck        # unchecked errors
+    - gosimple        # simplifications
+    - govet           # suspicious constructs
+    - ineffassign     # ineffectual assignments
+    - staticcheck     # static analysis
+    - unused          # unused code
+    - gosec           # security issues
+    - misspell        # spelling mistakes
+    - gofmt           # formatting
+    - exhaustive      # exhaustive switch statements
+    - noctx           # http requests without context
+
+linters-settings:
+  gosec:
+    excludes:
+      - G402  # TLS InsecureSkipVerify is intentional and flagged in code
+
+issues:
+  exclude-rules:
+    - path: _test\.go
+      linters:
+        - gosec
+        - errcheck

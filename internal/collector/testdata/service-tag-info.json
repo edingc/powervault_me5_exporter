@@ -1,0 +1,23 @@
+{
+  "service-tag-info": [
+    {
+      "object-name": "service-tag-info",
+      "meta": "/meta/service-tag-info",
+      "enclosure-id": 0,
+      "service-tag": "AAAAAAA"
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:52)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:52",
+      "time-stamp-numeric": 1773674752
+    }
+  ]
+}

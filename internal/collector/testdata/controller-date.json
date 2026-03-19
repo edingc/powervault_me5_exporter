@@ -1,0 +1,30 @@
+{
+  "time-settings-table": [
+    {
+      "object-name": "time-settings-table",
+      "meta": "/meta/time-settings-table",
+      "date-time": "2026-03-16 15:25:43",
+      "date-time-numeric": 1773674743,
+      "time-zone-region": "GMT",
+      "time-zone-offset": "+00:00",
+      "time-zone-dst": "Off",
+      "time-zone-dst-numeric": 0,
+      "ntp-state": "Enabled",
+      "ntp-address": "192.168.1.100",
+      "ntp-contact-time": "2026-03-13 17:54:25"
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:43)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:43",
+      "time-stamp-numeric": 1773674743
+    }
+  ]
+}
