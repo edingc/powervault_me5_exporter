@@ -1,6 +1,6 @@
 # Systemd Unit
 
-_The below instructions mimic Debian's conventions for Prometheus exporters._
+_These instructions mimic Debian's conventions for Prometheus exporters._
 
 The unit file `prometheus-powervault-me5-exporter.service` in this directory should be placed in  `/etc/systemd/system`. The `prometheus-powervault-me5-exporter` binary should be placed in `/usr/local/bin`.
 
