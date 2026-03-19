@@ -47,8 +47,15 @@ scrape_configs:
 
 ### Docker
 
+You must pass flags and the credentials to the container.
+
 ```bash
-docker run -d -p 9850:9850 --name powervault-me5-exporter edingc/powervault-me5-exporter
+docker run -d \
+  -p 9850:9850 \
+  --name powervault-me5-exporter \
+  -e ME5_USERNAME='your_username' \
+  -e ME5_PASSWORD='your_password' \
+  edingc/powervault-me5-exporter --me5.host=192.168.1.100 --me5.insecure-skip-verify
 ```
 
 ## Collectors

@@ -2,6 +2,7 @@
 FROM golang:1.25.7-alpine3.23 AS builder
 
 ARG VERSION=v1.0.0
+ARG BRANCH=unknown
 ARG COMMIT=unknown
 ARG BUILD_DATE=unknown
 
@@ -16,7 +17,8 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
     -ldflags "-w -s \
       -X github.com/prometheus/common/version.Version=${VERSION} \
       -X github.com/prometheus/common/version.Revision=${COMMIT} \
-      -X github.com/prometheus/common/version.BuildDate=${BUILD_DATE}" \
+      -X github.com/prometheus/common/version.BuildDate=${BUILD_DATE} \
+      -X github.com/prometheus/common/version.Branch=${BRANCH}" \
     -o /prometheus-powervault-me5-exporter \
     ./cmd/powervault_me5_exporter
 

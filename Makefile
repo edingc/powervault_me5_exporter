@@ -5,13 +5,14 @@ IMAGE       := powervault-me5-exporter
 # Inject version info at build time
 VERSION     ?= $(shell cat VERSION || echo "dev")
 COMMIT      ?= $(shell git rev-parse --short HEAD 2>/dev/null || echo "unknown")
+BRANCH      ?= $(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown")
 BUILD_DATE  ?= $(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
 
 LDFLAGS := \
   -X github.com/prometheus/common/version.Version=$(VERSION) \
   -X github.com/prometheus/common/version.Revision=$(COMMIT) \
   -X github.com/prometheus/common/version.BuildDate=$(BUILD_DATE) \
-  -X github.com/prometheus/common/version.Branch=$(shell git rev-parse --abbrev-ref HEAD 2>/dev/null || echo "unknown") \
+  -X github.com/prometheus/common/version.Branch=$(BRANCH) \
   -w -s
 
 .PHONY: all build test lint fmt vet clean docker-build help
@@ -48,6 +49,7 @@ docker-build:
 	  --build-arg VERSION=$(VERSION) \
 	  --build-arg COMMIT=$(COMMIT) \
 	  --build-arg BUILD_DATE=$(BUILD_DATE) \
+	  --build-arg BRANCH=$(BRANCH) \
 	  -t $(IMAGE):$(VERSION) \
 	  -t $(IMAGE):latest \
 	  .

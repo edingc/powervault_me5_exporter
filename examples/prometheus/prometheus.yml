@@ -10,4 +10,4 @@ scrape_configs:
       - targets:
           - localhost:9850
         labels:
-          host: 192.168.1.1
+          host: 192.168.1.100
