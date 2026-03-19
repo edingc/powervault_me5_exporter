@@ -4,7 +4,7 @@
 
 # Dell PowerVault ME5 Prometheus Exporter
 
-A Prometheus exporter for the Dell PowerVault ME5 series REST API, heavily influenced by the patterns of the offical [node_exporter](https://github.com/prometheus/node_exporter/).
+A Prometheus exporter for the Dell PowerVault ME5 series REST API, heavily influenced by the patterns of the official [node_exporter](https://github.com/prometheus/node_exporter/).
 
 ## AI Disclaimer
 
