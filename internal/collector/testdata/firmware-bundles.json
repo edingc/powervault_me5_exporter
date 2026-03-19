@@ -1,0 +1,45 @@
+{
+  "firmware-bundles": [
+    {
+      "object-name": "firmware-bundle",
+      "meta": "/meta/firmware-bundles",
+      "bundle-version": "ME5.1.2.1.5",
+      "build-date": "2025-07-21T07:30:34Z",
+      "measurement": "0",
+      "measurement-type": "sha256",
+      "status": "Active",
+      "status-numeric": 2,
+      "health": "OK",
+      "health-numeric": 0,
+      "health-reason": "",
+      "health-recommendation": ""
+    },
+    {
+      "object-name": "firmware-bundle",
+      "meta": "/meta/firmware-bundles",
+      "bundle-version": "ME5.1.2.1.1",
+      "build-date": "2024-10-02T18:07:19Z",
+      "measurement": "0",
+      "measurement-type": "sha256",
+      "status": "Available",
+      "status-numeric": 3,
+      "health": "OK",
+      "health-numeric": 0,
+      "health-reason": "",
+      "health-recommendation": ""
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:36)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:36",
+      "time-stamp-numeric": 1773674736
+    }
+  ]
+}

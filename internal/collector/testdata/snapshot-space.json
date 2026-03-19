@@ -1,0 +1,35 @@
+{
+  "snap-space": [
+    {
+      "object-name": "snap-space",
+      "meta": "/meta/snap-space",
+      "pool": "A",
+      "serial-number": "00c0fffa39f700001395066801000000",
+      "snap-limit-threshold": "10%",
+      "snap-limit-size": "17.7TB",
+      "snap-limit-size-numeric": 34631528448,
+      "allocated-percent-pool": "0.0%",
+      "allocated-percent-snapspace": "0.0%",
+      "allocated-size": "1371.5MB",
+      "allocated-size-numeric": 2678784,
+      "snap-low-threshold": "75%",
+      "snap-middle-threshold": "90%",
+      "snap-high-threshold": "99%",
+      "limit-policy": "Notify Only",
+      "limit-policy-numeric": 0
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:59)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:59",
+      "time-stamp-numeric": 1773674759
+    }
+  ]
+}

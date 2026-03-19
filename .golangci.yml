@@ -1,0 +1,35 @@
+version: "2"
+linters:
+  enable:
+    - misspell
+    - revive
+  settings:
+    errcheck:
+      # Used in HTTP handlers, any error is handled by the server itself
+      exclude-functions:
+        - (net/http.ResponseWriter).Write
+    revive:
+      rules:
+        - name: unused-parameter
+          severity: warning
+          disabled: true
+  exclusions:
+    generated: lax
+    presets:
+      - comments
+      - common-false-positives
+      - legacy
+      - std-error-handling
+    rules:
+      - linters:
+          - errcheck
+        path: _test.go
+formatters:
+  enable:
+    - goimports
+  exclusions:
+    generated: lax
+  settings:
+    goimports:
+      local-prefixes:
+        - github.com/edingc/powervault_me5_exporter

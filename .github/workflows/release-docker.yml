@@ -1,0 +1,56 @@
+name: Release Docker
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - 'v*'
+
+jobs:
+  release-docker:
+    runs-on: ubuntu-latest
+    name: Release Docker
+    steps:
+
+      - name: Checkout repository
+        uses: actions/checkout@v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Set environment
+        run: |
+          echo "VERSION=$(cat VERSION)" >> $GITHUB_ENV
+          echo "COMMIT=$(git rev-parse --short HEAD 2>/dev/null)" >> $GITHUB_ENV
+          echo "BRANCH=$(git rev-parse --abbrev-ref HEAD 2>/dev/null)" >> $GITHUB_ENV
+          echo "BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> $GITHUB_ENV
+
+      # Set up BuildKit Docker container builder
+      # https://github.com/docker/setup-buildx-action
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4.0.0
+
+      # Login against a Docker registry 
+      # https://github.com/docker/login-action
+      - name: Log into DockerHub registry
+        uses: docker/login-action@v4.0.0
+        with:
+          username: edingc
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      # Build and push Docker image with Buildx
+      # https://github.com/docker/build-push-action
+      - name: Build and push Docker image
+        id: build-and-push
+        uses: docker/build-push-action@v7.0.0
+        with:
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: |
+            edingc/prometheus-powervault-me5-exporter:${{ env.VERSION }}
+
+      - name: Echo image digest
+        run: echo ${{ steps.build-and-push.outputs.digest }}

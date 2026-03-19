@@ -1,0 +1,77 @@
+{
+  "system": [
+    {
+      "object-name": "system-information",
+      "meta": "/meta/system",
+      "system-name": "Uninitialized Name",
+      "system-contact": "Uninitialized Contact",
+      "system-location": "Uninitialized Location",
+      "system-information": "Uninitialized Info",
+      "midplane-serial-number": "CN0AAAAAAAA000000AA01",
+      "url": "/system/",
+      "vendor-name": "DELL EMC",
+      "product-id": "ME5084",
+      "product-brand": "PowerVault",
+      "scsi-vendor-id": "DellEMC",
+      "scsi-product-id": "ME5",
+      "enclosure-count": 1,
+      "health": "Unknown",
+      "health-numeric": 3,
+      "health-reason": "The partner MC is either not up, not communicating, or not synchronized with the local MC. The system health cannot be computed from this controller.",
+      "other-MC-status": "Not Operational",
+      "other-MC-status-numeric": 2,
+      "pfuStatus": "Idle",
+      "pfuStatus-numeric": 0,
+      "security-system-management": "Not in use",
+      "security-system-management-numeric": 1,
+      "supported-locales": "English (English), German (Deutsch), Spanish (espa\u00f1ol), French (fran\u00e7ais), Japanese (\u65e5\u672c\u8a9e), Korean (\ud55c\uad6d\uc5b4), Chinese-Simplified (\u7b80\u4f53\u4e2d\u6587)",
+      "current-node-wwn": "500c0ff000000000",
+      "fde-security-status": "Unsecured",
+      "fde-security-status-numeric": 1,
+      "platform-type": "Indium",
+      "platform-type-numeric": 6,
+      "platform-brand": "DELL EMC",
+      "platform-brand-numeric": 22,
+      "configuration-selector": "20",
+      "redundancy": [
+        {
+          "object-name": "system-redundancy",
+          "meta": "/meta/redundancy",
+          "redundancy-mode": "Active-Active ULP",
+          "redundancy-mode-numeric": 8,
+          "redundancy-status": "Redundant",
+          "redundancy-status-numeric": 2,
+          "controller-a-status": "Operational",
+          "controller-a-status-numeric": 0,
+          "controller-a-serial-number": "CN0BBBBBBBBB0000BA00",
+          "controller-b-status": "Operational",
+          "controller-b-status-numeric": 0,
+          "controller-b-serial-number": "CN0BBBBBBBBB0000DA00",
+          "other-MC-status": "Not Operational",
+          "other-MC-status-numeric": 2,
+          "system-ready": "Not Ready",
+          "system-ready-numeric": 1,
+          "local-ready": "Ready",
+          "local-ready-numeric": 0,
+          "local-reason": "",
+          "other-ready": "Management Controller is Not Ready",
+          "other-ready-numeric": 2,
+          "other-reason": "Storage Controller is initializing."
+        }
+      ]
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:38)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:38",
+      "time-stamp-numeric": 1773674738
+    }
+  ]
+}

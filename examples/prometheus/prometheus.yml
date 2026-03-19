@@ -1,0 +1,13 @@
+# example prometheus scrape configuration
+# a full scrape can take up to 45 seconds
+# set timeouts and intervals accordingly
+
+scrape_configs:
+  - job_name: powervault_me5_exporter
+    scrape_interval: 120s
+    scrape_timeout: 60s
+    static_configs:
+      - targets:
+          - localhost:9850
+        labels:
+          host: 192.168.1.100

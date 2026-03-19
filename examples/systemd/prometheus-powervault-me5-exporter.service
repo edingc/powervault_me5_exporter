@@ -1,0 +1,15 @@
+[Unit]
+Description=Prometheus exporter for Dell PowerVault ME5
+Documentation=https://github.com/edingc/powervault_me5_exporter
+
+[Service]
+Restart=on-failure
+User=prometheus
+EnvironmentFile=/etc/default/prometheus-powervault-me5-exporter
+ExecStart=/usr/local/bin/prometheus-powervault-me5-exporter $ARGS
+ExecReload=/bin/kill -HUP $MAINPID
+TimeoutStopSec=20s
+SendSIGKILL=no
+
+[Install]
+WantedBy=multi-user.target

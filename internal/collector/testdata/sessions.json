@@ -1,0 +1,36 @@
+{
+  "sessions": [
+    {
+      "object-name": "sessions",
+      "meta": "/meta/sessions",
+      "sessionId": "93",
+      "username": "monitoring",
+      "roles": "monitor",
+      "interface": "wbi",
+      "locale": "English",
+      "locale-numeric": 0,
+      "host": "192.168.1.2",
+      "state": "Active",
+      "timeout": 1800,
+      "timeout-counter": 1530,
+      "idle-time": 270,
+      "first-access": "2026-03-16 15:21:43",
+      "first-access-numeric": 1773674503,
+      "last-access": "2026-03-16 15:21:46",
+      "last-access-numeric": 1773674506
+    }
+  ],
+  "status": [
+    {
+      "object-name": "status",
+      "meta": "/meta/status",
+      "response-type": "Success",
+      "response-type-numeric": 0,
+      "response": "Command completed successfully. (2026-03-16 15:25:54)",
+      "return-code": 0,
+      "component-id": "",
+      "time-stamp": "2026-03-16 15:25:54",
+      "time-stamp-numeric": 1773674754
+    }
+  ]
+}
