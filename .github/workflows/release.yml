@@ -27,14 +27,11 @@ jobs:
       - name: Refresh Go Report Card
         uses: creekorful/goreportcard-action@v1.0
 
-      - name: Setup release environment
-        run: echo 'GITHUB_TOKEN=${{secrets.GITHUB_TOKEN}}' > .release-env
-
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v7
         with:
           distribution: goreleaser
-          version: latest
+          version: '~> v2'
           args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
