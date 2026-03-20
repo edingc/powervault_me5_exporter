@@ -61,8 +61,8 @@ jobs:
         uses: peter-evans/dockerhub-description@v5
         with:
           username: edingc
-          password: edingc/prometheus-powervault-me5-exporter
-          repository: peterevans/dockerhub-description
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          repository: edingc/prometheus-powervault-me5-exporter
 
       - name: Echo image digest
         run: echo ${{ steps.build-and-push.outputs.digest }}
