@@ -54,7 +54,15 @@ jobs:
           platforms: linux/amd64
           push: true
           tags: |
+            edingc/prometheus-powervault-me5-exporter:latest
             edingc/prometheus-powervault-me5-exporter:${{ env.VERSION }}
+
+      - name: Update DockerHub description
+        uses: peter-evans/dockerhub-description@v5
+        with:
+          username: edingc
+          password: edingc/prometheus-powervault-me5-exporter
+          repository: peterevans/dockerhub-description
 
       - name: Echo image digest
         run: echo ${{ steps.build-and-push.outputs.digest }}
