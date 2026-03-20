@@ -98,7 +98,7 @@ PowerVault tiers and tiering statistics are currently not supported.
 
 An example Grafana dashboard can be found in `docs/dashboards`.
 
-![Screenshot of a Grafana dashboard show metrics from the PowerVault ME5 Exporter.](docs/dashboards/me5_dashboard.png)
+![Screenshot of a Grafana dashboard show metrics from the PowerVault ME5 Exporter.](https://raw.githubusercontent.com/edingc/powervault_me5_exporter/refs/heads/main/docs/dashboards/me5_dashboard.png)
 
 ## Build from Source
 
