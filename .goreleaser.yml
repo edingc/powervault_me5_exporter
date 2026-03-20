@@ -23,7 +23,7 @@ builds:
       - -X github.com/prometheus/common/version.BuildDate={{.Date}}
 archives:
   - id: archive
-    builds:
+    ids:
       - amd64
     files:
       - LICENSE
