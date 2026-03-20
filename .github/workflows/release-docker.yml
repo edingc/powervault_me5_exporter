@@ -45,7 +45,7 @@ jobs:
         with:
           build-args: |
             BRANCH=${{ env.BRANCH }}
-            BUILD=${{ env.BUILD }}
+            BUILD_DATE=${{ env.BUILD_DATE }}
             COMMIT=${{ env.COMMIT }}
             VERSION=${{ env.VERSION }}
           cache-from: type=gha
