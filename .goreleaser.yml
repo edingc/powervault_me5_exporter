@@ -1,5 +1,6 @@
 ---
 version: 2
+project_name: prometheus-powervault-me5-exporter
 before:
   hooks:
     - go mod download
