@@ -30,31 +30,31 @@ func TestCollectSensors(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/sensor-status": data},
 	}, onlyEnabled(CollectorSensors))
 
 	expected := `
 # HELP me5_sensor_status Sensor status (0=Unsupported, 1=OK, 2=Critical, 3=Warning, 4=Unrecoverable, 5=Not Installed, 6=Unknown, 7=Unavailable).
 # TYPE me5_sensor_status gauge
-me5_sensor_status{container="controllers",controller="A",id="sensor_temp_ctrl_A.5",name="Disk Controller Temperature-Ctlr A",type="Temperature"} 1
-me5_sensor_status{container="controllers",controller="A",id="sensor_temp_ctrl_A.6",name="Host Controller Temperature-Ctlr A",type="Temperature"} 1
-me5_sensor_status{container="controllers",controller="B",id="sensor_temp_ctrl_B.1",name="CPU Temperature-Ctlr B",type="Temperature"} 1
-me5_sensor_status{container="controllers",controller="B",id="sensor_volt_ctrl_B.0",name="Capacitor Pack Voltage-Ctlr B",type="Voltage"} 1
-me5_sensor_status{container="controllers",controller="B",id="sensor_volt_ctrl_B.1",name="Capacitor Cell 1 Voltage-Ctlr B",type="Voltage"} 1
-me5_sensor_status{container="controllers",controller="B",id="sensor_volt_ctrl_B.2",name="Capacitor Cell 2 Voltage-Ctlr B",type="Voltage"} 1
-me5_sensor_status{container="power-supplies",controller="N/A",id="sensor_curr_psu_0.0.0",name="Current 12V Rail Loc: left-PSU",type="Current"} 1
-me5_sensor_status{container="power-supplies",controller="N/A",id="sensor_curr_psu_0.0.1",name="Current 5V Rail Loc: left-PSU",type="Current"} 1
+me5_sensor_status{container="controllers",controller="A",enclosure_id="0",id="sensor_temp_ctrl_A.5",name="Disk Controller Temperature-Ctlr A",type="Temperature"} 1
+me5_sensor_status{container="controllers",controller="A",enclosure_id="0",id="sensor_temp_ctrl_A.6",name="Host Controller Temperature-Ctlr A",type="Temperature"} 1
+me5_sensor_status{container="controllers",controller="B",enclosure_id="0",id="sensor_temp_ctrl_B.1",name="CPU Temperature-Ctlr B",type="Temperature"} 1
+me5_sensor_status{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.0",name="Capacitor Pack Voltage-Ctlr B",type="Voltage"} 1
+me5_sensor_status{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.1",name="Capacitor Cell 1 Voltage-Ctlr B",type="Voltage"} 1
+me5_sensor_status{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.2",name="Capacitor Cell 2 Voltage-Ctlr B",type="Voltage"} 1
+me5_sensor_status{container="power-supplies",controller="N/A",enclosure_id="0",id="sensor_curr_psu_0.0.0",name="Current 12V Rail Loc: left-PSU",type="Current"} 1
+me5_sensor_status{container="power-supplies",controller="N/A",enclosure_id="0",id="sensor_curr_psu_0.0.1",name="Current 5V Rail Loc: left-PSU",type="Current"} 1
 # HELP me5_sensor_value Sensor value.
 # TYPE me5_sensor_value gauge
-me5_sensor_value{container="controllers",controller="A",id="sensor_temp_ctrl_A.5",name="Disk Controller Temperature-Ctlr A",type="Temperature"} 104
-me5_sensor_value{container="controllers",controller="A",id="sensor_temp_ctrl_A.6",name="Host Controller Temperature-Ctlr A",type="Temperature"} 111
-me5_sensor_value{container="controllers",controller="B",id="sensor_temp_ctrl_B.1",name="CPU Temperature-Ctlr B",type="Temperature"} 125
-me5_sensor_value{container="controllers",controller="B",id="sensor_volt_ctrl_B.0",name="Capacitor Pack Voltage-Ctlr B",type="Voltage"} 10.75
-me5_sensor_value{container="controllers",controller="B",id="sensor_volt_ctrl_B.1",name="Capacitor Cell 1 Voltage-Ctlr B",type="Voltage"} 2.69
-me5_sensor_value{container="controllers",controller="B",id="sensor_volt_ctrl_B.2",name="Capacitor Cell 2 Voltage-Ctlr B",type="Voltage"} 2.69
-me5_sensor_value{container="power-supplies",controller="N/A",id="sensor_curr_psu_0.0.0",name="Current 12V Rail Loc: left-PSU",type="Current"} 19.68
-me5_sensor_value{container="power-supplies",controller="N/A",id="sensor_curr_psu_0.0.1",name="Current 5V Rail Loc: left-PSU",type="Current"} 0.07
+me5_sensor_value{container="controllers",controller="A",enclosure_id="0",id="sensor_temp_ctrl_A.5",name="Disk Controller Temperature-Ctlr A",type="Temperature"} 104
+me5_sensor_value{container="controllers",controller="A",enclosure_id="0",id="sensor_temp_ctrl_A.6",name="Host Controller Temperature-Ctlr A",type="Temperature"} 111
+me5_sensor_value{container="controllers",controller="B",enclosure_id="0",id="sensor_temp_ctrl_B.1",name="CPU Temperature-Ctlr B",type="Temperature"} 125
+me5_sensor_value{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.0",name="Capacitor Pack Voltage-Ctlr B",type="Voltage"} 10.75
+me5_sensor_value{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.1",name="Capacitor Cell 1 Voltage-Ctlr B",type="Voltage"} 2.69
+me5_sensor_value{container="controllers",controller="B",enclosure_id="0",id="sensor_volt_ctrl_B.2",name="Capacitor Cell 2 Voltage-Ctlr B",type="Voltage"} 2.69
+me5_sensor_value{container="power-supplies",controller="N/A",enclosure_id="0",id="sensor_curr_psu_0.0.0",name="Current 12V Rail Loc: left-PSU",type="Current"} 19.68
+me5_sensor_value{container="power-supplies",controller="N/A",enclosure_id="0",id="sensor_curr_psu_0.0.1",name="Current 5V Rail Loc: left-PSU",type="Current"} 0.07
 `
 
 	if err := testutil.CollectAndCompare(c, strings.NewReader(expected),
@@ -80,7 +80,7 @@ func TestCollectSensors_ParseFloatOverflow(t *testing.T) {
 		}
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/sensor-status": b},
 	}, onlyEnabled(CollectorSensors))
 
@@ -95,7 +95,7 @@ func TestCollectSensors_ParseFloatOverflow(t *testing.T) {
 }
 
 func TestCollectSensors_EmptyResponse(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/sensor-status": []byte(`{"sensors":[]}`)},
 	}, onlyEnabled(CollectorSensors))
 
@@ -109,7 +109,7 @@ func TestCollectSensors_EmptyResponse(t *testing.T) {
 }
 
 func TestCollectSensors_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/sensor-status": errors.New("connection refused")},
 	}, onlyEnabled(CollectorSensors))
 
