@@ -30,7 +30,7 @@ func TestCollectServiceTagInfo(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/service-tag-info": data},
 	}, onlyEnabled(CollectorServiceTag))
 
@@ -46,7 +46,7 @@ me5_service_tag_info{enclosure_id="0",service_tag="AAAAAAA"} 1
 }
 
 func TestCollectServiceTagInfo_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/service-tag-info": errors.New("connection refused")},
 	}, onlyEnabled(CollectorServiceTag))
 

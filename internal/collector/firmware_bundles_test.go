@@ -30,7 +30,7 @@ func TestCollectFirmwareBundles(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/firmware-bundles": data},
 	}, onlyEnabled(CollectorFirmwareBundles))
 
@@ -54,7 +54,7 @@ me5_firmware_bundle_info{build_date="2025-07-21T07:30:34Z",status_name="Active",
 }
 
 func TestCollectFirmwareBundles_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/firmware-bundles": errors.New("connection refused")},
 	}, onlyEnabled(CollectorFirmwareBundles))
 

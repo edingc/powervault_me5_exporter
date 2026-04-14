@@ -30,7 +30,7 @@ func TestCollectControllerStats(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/controller-statistics": data},
 	}, onlyEnabled(CollectorControllerStats))
 
@@ -119,7 +119,7 @@ me5_controller_writes_total{id="controller_B"} 38410
 }
 
 func TestCollectControllerStats_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/controller-statistics": errors.New("connection refused")},
 	}, onlyEnabled(CollectorControllerStats))
 

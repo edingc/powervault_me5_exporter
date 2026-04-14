@@ -30,7 +30,7 @@ func TestCollectSessions(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/sessions": data},
 	}, onlyEnabled(CollectorSessions))
 
@@ -49,7 +49,7 @@ me5_sessions_info{host="192.168.1.2",interface="wbi",session_id="93",username="m
 }
 
 func TestCollectSessions_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/sessions": errors.New("connection refused")},
 	}, onlyEnabled(CollectorSessions))
 

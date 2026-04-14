@@ -30,7 +30,7 @@ func TestCollectEvents(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/events": data},
 	}, onlyEnabled(CollectorEvents))
 
@@ -50,7 +50,7 @@ me5_events_by_severity{severity="WARNING"} 1
 }
 
 func TestCollectEvents_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/events": errors.New("connection refused")},
 	}, onlyEnabled(CollectorEvents))
 

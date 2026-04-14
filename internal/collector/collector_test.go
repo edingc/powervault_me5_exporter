@@ -20,9 +20,16 @@ import (
 	"fmt"
 	"os"
 	"testing"
+	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
+
+// newTestCollector wraps NewME5Collector with test-friendly defaults
+// (30s timeout, concurrency=24 so all collectors run freely in tests).
+func newTestCollector(client APIClient, enabled map[string]bool) *ME5Collector {
+	return NewME5Collector(client, enabled, 30*time.Second, 24)
+}
 
 func TestMain(m *testing.M) {
 	os.Exit(m.Run())
@@ -48,7 +55,7 @@ func (m *mockClient) Get(_ context.Context, path string, dest any) error {
 // TestCollect_SubCollectorError verifies that Collect still emits scrape metrics when
 // a sub-collector fails, and exercises the error branches in Collect and collect.
 func TestCollect_SubCollectorError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/alerts": errors.New("connection refused")},
 	}, map[string]bool{CollectorAlerts: true})
 

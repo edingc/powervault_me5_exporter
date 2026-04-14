@@ -30,7 +30,7 @@ func TestCollectFRUs(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/frus": data},
 	}, onlyEnabled(CollectorFRUs))
 
@@ -78,7 +78,7 @@ me5_fru_status{name="SIDEPLANE",serial="BPSXXXXXXXXXXXXXX3"} 4
 }
 
 func TestCollectFRUs_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/frus": errors.New("connection refused")},
 	}, onlyEnabled(CollectorFRUs))
 

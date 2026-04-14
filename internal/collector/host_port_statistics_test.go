@@ -30,7 +30,7 @@ func TestCollectHostPortStats(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/host-port-statistics": data},
 	}, onlyEnabled(CollectorHostPortStats))
 
@@ -132,7 +132,7 @@ me5_host_port_writes_total{port="hostport_B3"} 38410
 }
 
 func TestCollectHostPortStats_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/host-port-statistics": errors.New("connection refused")},
 	}, onlyEnabled(CollectorHostPortStats))
 

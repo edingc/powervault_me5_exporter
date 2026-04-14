@@ -17,6 +17,7 @@ import (
 	"context"
 	"fmt"
 	"log/slog"
+	"sync"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
@@ -117,8 +118,10 @@ type APIClient interface {
 
 // ME5Collector implements prometheus.Collector for the Dell PowerVault ME5.
 type ME5Collector struct {
-	client  APIClient
-	enabled map[string]bool
+	client        APIClient
+	enabled       map[string]bool
+	scrapeTimeout time.Duration
+	concurrency   int
 
 	// Descriptors (Alphabetized)
 	alert           alertDescs
@@ -152,15 +155,17 @@ type ME5Collector struct {
 	scrapeSuccess         *prometheus.Desc
 }
 
-func NewME5Collector(client APIClient, enabled map[string]bool) *ME5Collector {
+func NewME5Collector(client APIClient, enabled map[string]bool, scrapeTimeout time.Duration, concurrency int) *ME5Collector {
 	const ns = "me5"
 	label := func(subsystem, name, help string, variableLabels ...string) *prometheus.Desc {
 		return prometheus.NewDesc(prometheus.BuildFQName(ns, subsystem, name), help, variableLabels, nil)
 	}
 
 	return &ME5Collector{
-		client:  client,
-		enabled: enabled,
+		client:        client,
+		enabled:       enabled,
+		scrapeTimeout: scrapeTimeout,
+		concurrency:   concurrency,
 
 		alert:           newAlertDescs(label),
 		controller:      newControllerDescs(label),
@@ -225,8 +230,9 @@ func (c *ME5Collector) Describe(ch chan<- *prometheus.Desc) {
 
 func (c *ME5Collector) Collect(ch chan<- prometheus.Metric) {
 	start := time.Now()
+	slog.Debug("Scrape started")
 	// Set a deadline for the entire scrape to ensure we don't hang indefinitely.
-	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), c.scrapeTimeout)
 	defer cancel()
 
 	success := 1.0
@@ -235,8 +241,10 @@ func (c *ME5Collector) Collect(ch chan<- prometheus.Metric) {
 		success = 0
 	}
 
+	elapsed := time.Since(start)
+	slog.Debug("Scrape finished", "duration", elapsed.Round(time.Millisecond), "success", success == 1.0)
 	ch <- prometheus.MustNewConstMetric(c.scrapeSuccess, prometheus.GaugeValue, success)
-	ch <- prometheus.MustNewConstMetric(c.scrapeDurationSeconds, prometheus.GaugeValue, time.Since(start).Seconds())
+	ch <- prometheus.MustNewConstMetric(c.scrapeDurationSeconds, prometheus.GaugeValue, elapsed.Seconds())
 }
 
 func (c *ME5Collector) collect(ctx context.Context, ch chan<- prometheus.Metric) error {
@@ -271,17 +279,36 @@ func (c *ME5Collector) collect(ctx context.Context, ch chan<- prometheus.Metric)
 		{CollectorVolumes, c.CollectVolumes},
 	}
 
-	var hasError bool
+	var (
+		wg       sync.WaitGroup
+		mu       sync.Mutex
+		hasError bool
+		sem      = make(chan struct{}, c.concurrency)
+	)
+
 	for _, col := range collectors {
 		if enabled, ok := c.enabled[col.name]; ok && !enabled {
 			continue
 		}
 
-		if err := col.collect(ctx, ch); err != nil {
-			slog.Warn("Sub-collector failed", "collector", col.name, "error", err)
-			hasError = true
-		}
+		wg.Add(1)
+		go func(name string, fn func(context.Context, chan<- prometheus.Metric) error) {
+			defer wg.Done()
+			sem <- struct{}{}
+			defer func() { <-sem }()
+			colStart := time.Now()
+			slog.Debug("Sub-collector starting", "collector", name)
+			if err := fn(ctx, ch); err != nil {
+				slog.Warn("Sub-collector failed", "collector", name, "error", err)
+				mu.Lock()
+				hasError = true
+				mu.Unlock()
+			}
+			slog.Debug("Sub-collector finished", "collector", name, "duration", time.Since(colStart).Round(time.Millisecond))
+		}(col.name, col.collect)
 	}
+
+	wg.Wait()
 
 	if hasError {
 		return fmt.Errorf("one or more sub-collectors failed")

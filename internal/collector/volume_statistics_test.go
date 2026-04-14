@@ -30,7 +30,7 @@ func TestCollectVolumeStats(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/volume-statistics": data},
 	}, onlyEnabled(CollectorVolumeStats))
 
@@ -99,7 +99,7 @@ me5_volume_writes_total{name="scratch",serial="00c0fffa39f700006095066801000000"
 }
 
 func TestCollectVolumeStats_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/volume-statistics": errors.New("connection refused")},
 	}, onlyEnabled(CollectorVolumeStats))
 

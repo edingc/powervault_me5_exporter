@@ -30,7 +30,7 @@ func TestCollectPowerSupplies(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/power-supplies": data},
 	}, onlyEnabled(CollectorPowerSupplies))
 
@@ -55,7 +55,7 @@ me5_power_supply_status{name="PSU 1, Right",serial="CN0CCCCCCCC0000CC0002"} 0
 }
 
 func TestCollectPowerSupplies_EmptyResponse(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/power-supplies": []byte(`{"power-supplies":[]}`)},
 	}, onlyEnabled(CollectorPowerSupplies))
 
@@ -69,7 +69,7 @@ func TestCollectPowerSupplies_EmptyResponse(t *testing.T) {
 }
 
 func TestCollectPowerSupplies_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/power-supplies": errors.New("connection refused")},
 	}, onlyEnabled(CollectorPowerSupplies))
 

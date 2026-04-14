@@ -30,7 +30,7 @@ func TestCollectSystem(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/system": data},
 	}, onlyEnabled(CollectorSystem))
 
@@ -76,7 +76,7 @@ me5_system_redundancy_status 2
 }
 
 func TestCollectSystem_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/system": errors.New("connection refused")},
 	}, onlyEnabled(CollectorSystem))
 

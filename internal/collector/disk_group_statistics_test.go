@@ -30,7 +30,7 @@ func TestCollectDiskGroupStats(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/disk-group-statistics": data},
 	}, onlyEnabled(CollectorDiskGroupStats))
 
@@ -88,7 +88,7 @@ me5_disk_group_writes_total{name="dgA01",serial="00c0fffa39f70000129506680000000
 }
 
 func TestCollectDiskGroupStats_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/disk-group-statistics": errors.New("connection refused")},
 	}, onlyEnabled(CollectorDiskGroupStats))
 

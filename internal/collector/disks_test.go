@@ -30,7 +30,7 @@ func TestCollectDisks(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/disks": data},
 	}, onlyEnabled(CollectorDisks))
 
@@ -74,7 +74,7 @@ me5_disk_temperature_celsius{serial="S0DUMMY0X000002"} 29
 }
 
 func TestCollectDisks_EmptyResponse(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/disks": []byte(`{"drives":[]}`)},
 	}, onlyEnabled(CollectorDisks))
 
@@ -88,7 +88,7 @@ func TestCollectDisks_EmptyResponse(t *testing.T) {
 }
 
 func TestCollectDisks_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/disks": errors.New("connection refused")},
 	}, onlyEnabled(CollectorDisks))
 
