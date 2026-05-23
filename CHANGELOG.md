@@ -6,6 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [2.0.0] - 2026-05-23
+
+### Added
+
+- Concurrent sub-collector dispatch via `--me5.scrape-concurrency` (default `6`) —
+  sub-collectors run in parallel within a semaphore-bounded goroutine pool, reducing
+  scrape latency on large arrays.
+- Configurable scrape timeout via `--me5.scrape-timeout` (default `2m`), replacing
+  the previously hardcoded 1-minute deadline.
+- `build-static` Makefile target (`CGO_ENABLED=0`) for portable binaries without a
+  glibc dependency — improves compatibility across Linux distributions.
+- `enclosure_id` label on `me5_sensor_status` and `me5_sensor_value` — supports
+  deployments with primary and expansion enclosures (JBOD shelves). Single-enclosure
+  deployments will see `enclosure_id="0"` on all sensor metrics.
+
+### Fixed
+
+- `--no-collect.<name>` flags now correctly disable sub-collectors — previously
+  `disabled=false` was never written to the enabled map, so the flag had no effect.
+
+### Changed
+
+- **BREAKING:** `me5_sensor_status` and `me5_sensor_value` gain a new `enclosure_id`
+  label. Existing PromQL queries and Grafana panels targeting these metrics must be
+  updated. Single-enclosure deployments will see `enclosure_id="0"`.
+
 ## [1.0.4] - 2026-05-23
 
 - Dependency updates.
