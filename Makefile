@@ -15,13 +15,17 @@ LDFLAGS := \
   -X github.com/prometheus/common/version.Branch=$(BRANCH) \
   -w -s
 
-.PHONY: all build test lint fmt vet clean docker-build help
+.PHONY: all build build-static test lint fmt vet clean docker-build help
 
 all: build
 
 ## build: compile the binary
 build:
 	go build -ldflags "$(LDFLAGS)" -o $(BINARY) ./cmd/powervault_me5_exporter
+
+## build-static: compile a fully static binary (CGO_ENABLED=0)
+build-static:
+	CGO_ENABLED=0 go build -ldflags "$(LDFLAGS)" -o $(BINARY) ./cmd/powervault_me5_exporter
 
 ## test: run all tests
 test:

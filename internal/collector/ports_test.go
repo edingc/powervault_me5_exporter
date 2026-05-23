@@ -30,7 +30,7 @@ func TestCollectPorts(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/ports": data},
 	}, onlyEnabled(CollectorPorts))
 
@@ -110,7 +110,7 @@ me5_port_status{controller="B",port="B3"} 0
 }
 
 func TestCollectPorts_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/ports": errors.New("connection refused")},
 	}, onlyEnabled(CollectorPorts))
 

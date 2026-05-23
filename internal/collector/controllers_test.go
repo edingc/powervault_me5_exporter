@@ -30,7 +30,7 @@ func TestCollectControllers(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/controllers": data},
 	}, onlyEnabled(CollectorControllers))
 
@@ -84,7 +84,7 @@ me5_controller_virtual_disks{id="B",ip="192.0.2.2"} 1
 }
 
 func TestCollectControllers_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/controllers": errors.New("connection refused")},
 	}, onlyEnabled(CollectorControllers))
 

@@ -31,8 +31,8 @@ type sensorDescs struct {
 
 func newSensorDescs(label func(string, string, string, ...string) *prometheus.Desc) sensorDescs {
 	return sensorDescs{
-		status: label("sensor", "status", "Sensor status (0=Unsupported, 1=OK, 2=Critical, 3=Warning, 4=Unrecoverable, 5=Not Installed, 6=Unknown, 7=Unavailable).", "name", "type", "container", "controller", "id"),
-		value:  label("sensor", "value", "Sensor value.", "name", "type", "container", "controller", "id"),
+		status: label("sensor", "status", "Sensor status (0=Unsupported, 1=OK, 2=Critical, 3=Warning, 4=Unrecoverable, 5=Not Installed, 6=Unknown, 7=Unavailable).", "name", "type", "container", "controller", "id", "enclosure_id"),
+		value:  label("sensor", "value", "Sensor value.", "name", "type", "container", "controller", "id", "enclosure_id"),
 	}
 }
 
@@ -45,6 +45,7 @@ func (c *ME5Collector) CollectSensors(ctx context.Context, ch chan<- prometheus.
 	var resp struct {
 		Sensors []struct {
 			DurableID     string  `json:"durable-id"`
+			EnclosureID   float64 `json:"enclosure-id"`
 			ControllerID  string  `json:"controller-id"`
 			SensorName    string  `json:"sensor-name"`
 			Value         string  `json:"value"`
@@ -65,11 +66,12 @@ func (c *ME5Collector) CollectSensors(ctx context.Context, ch chan<- prometheus.
 	}
 
 	for _, s := range resp.Sensors {
-		ch <- prometheus.MustNewConstMetric(c.sensor.status, prometheus.GaugeValue, s.StatusNumeric, s.SensorName, s.SensorType, s.Container, s.ControllerID, s.DurableID)
+		encID := strconv.Itoa(int(s.EnclosureID))
+		ch <- prometheus.MustNewConstMetric(c.sensor.status, prometheus.GaugeValue, s.StatusNumeric, s.SensorName, s.SensorType, s.Container, s.ControllerID, s.DurableID, encID)
 
 		if match := sensorValuePattern.FindString(s.Value); match != "" {
 			if val, err := strconv.ParseFloat(match, 64); err == nil {
-				ch <- prometheus.MustNewConstMetric(c.sensor.value, prometheus.GaugeValue, val, s.SensorName, s.SensorType, s.Container, s.ControllerID, s.DurableID)
+				ch <- prometheus.MustNewConstMetric(c.sensor.value, prometheus.GaugeValue, val, s.SensorName, s.SensorType, s.Container, s.ControllerID, s.DurableID, encID)
 			} else {
 				slog.Debug("failed to parse extracted sensor value", "sensor", s.SensorName, "raw", s.Value, "extracted", match, "error", err)
 			}

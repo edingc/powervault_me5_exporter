@@ -30,7 +30,7 @@ func TestCollectPools(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/pools": data},
 	}, onlyEnabled(CollectorPools))
 
@@ -80,7 +80,7 @@ me5_pool_volumes{pool="A",serial="00c0fffa39f700001395066801000000"} 2
 }
 
 func TestCollectPools_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/pools": errors.New("connection refused")},
 	}, onlyEnabled(CollectorPools))
 

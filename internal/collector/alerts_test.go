@@ -31,7 +31,7 @@ func TestCollectAlerts(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/alerts": data},
 	}, onlyEnabled(CollectorAlerts))
 
@@ -51,7 +51,7 @@ me5_alerts_by_severity{acknowledged="Yes",resolved="No",severity="INFORMATIONAL"
 
 // Test what happens if API connection is faulty
 func TestCollectAlerts_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/alerts": errors.New("connection refused")},
 	}, onlyEnabled(CollectorAlerts))
 

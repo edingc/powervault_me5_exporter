@@ -48,6 +48,8 @@ var (
 	me5User                = kingpin.Flag("me5.username", "ME5 API username").Envar("ME5_USERNAME").String()
 	me5Password            = kingpin.Flag("me5.password", "ME5 API password").Envar("ME5_PASSWORD").String()
 	timeout                = kingpin.Flag("me5.timeout", "PowerVault API connect timeout.").Default("30s").Duration()
+	scrapeTimeout          = kingpin.Flag("me5.scrape-timeout", "Maximum duration for a full metrics scrape.").Default("2m").Duration()
+	scrapeConcurrency      = kingpin.Flag("me5.scrape-concurrency", "Number of sub-collectors to run in parallel (1=serial).").Default("6").Int()
 	enablePprof            = kingpin.Flag("web.enable-pprof", "Enable pprof profiling endpoints under /debug/pprof.").Bool()
 	metricsPath            = kingpin.Flag("web.telemetry-path", "Path under which to expose metrics.").Default("/metrics").String()
 	disableExporterMetrics = kingpin.Flag("web.disable-exporter-metrics", "Exclude metrics about the exporter itself.").Bool()
@@ -73,6 +75,7 @@ func main() {
 	kingpin.Parse()
 
 	logger := promslog.New(promslogConfig)
+	slog.SetDefault(logger)
 	logger.Info("Starting powervault_me5_exporter", "version", version.Info())
 
 	// We need a host set, and credentials for said host
@@ -97,8 +100,8 @@ func main() {
 	enabled := make(map[string]bool)
 	var enabledNames []string
 	for name, f := range collectorFlags {
+		enabled[name] = *f
 		if *f {
-			enabled[name] = true
 			enabledNames = append(enabledNames, name)
 		}
 	}
@@ -107,7 +110,7 @@ func main() {
 
 	reg := prometheus.NewRegistry()
 	reg.MustRegister(versioncollector.NewCollector("powervault_me5_exporter"))
-	reg.MustRegister(collector.NewME5Collector(c, enabled))
+	reg.MustRegister(collector.NewME5Collector(c, enabled, *scrapeTimeout, *scrapeConcurrency))
 
 	// Avoids accidentally serving handlers that dependencies might register on DefaultServeMux.
 	// This is used to stop pprof from registering by default.
@@ -149,6 +152,7 @@ func main() {
 	if !*disableExporterMetrics {
 		metricsHandler = promhttp.InstrumentMetricHandler(exporterReg, metricsHandler)
 	}
+	metricsHandler = scrapeLoggingMiddleware(metricsHandler, logger)
 
 	mux.Handle(*metricsPath, metricsHandler)
 
@@ -186,4 +190,14 @@ func main() {
 	if err := srv.Shutdown(shutdownCtx); err != nil {
 		logger.Error("Error during server shutdown", "err", err)
 	}
+}
+
+// scrapeLoggingMiddleware logs the start and end of each /metrics request at debug level.
+func scrapeLoggingMiddleware(next http.Handler, logger *slog.Logger) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		start := time.Now()
+		logger.Debug("Scrape request received", "remote_addr", r.RemoteAddr, "user_agent", r.UserAgent())
+		next.ServeHTTP(w, r)
+		logger.Debug("Scrape request completed", "remote_addr", r.RemoteAddr, "duration", time.Since(start).Round(time.Millisecond))
+	})
 }

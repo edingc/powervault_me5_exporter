@@ -30,7 +30,7 @@ func TestCollectControllerDate(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/controller-date": data},
 	}, onlyEnabled(CollectorControllerDate))
 
@@ -49,7 +49,7 @@ me5_controller_date_ntp_contact_time_info{ntp_address="192.168.1.100",ntp_last_c
 }
 
 func TestCollectControllerDate_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/controller-date": errors.New("connection refused")},
 	}, onlyEnabled(CollectorControllerDate))
 

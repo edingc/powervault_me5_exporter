@@ -30,7 +30,7 @@ func TestCollectFans(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/fans": data},
 	}, onlyEnabled(CollectorFans))
 
@@ -55,7 +55,7 @@ me5_fan_status{location="Enclosure 0, Fan Module 0",name="Fan 1"} 0
 }
 
 func TestCollectFans_EmptyResponse(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/fans": []byte(`{"fan":[]}`)},
 	}, onlyEnabled(CollectorFans))
 
@@ -69,7 +69,7 @@ func TestCollectFans_EmptyResponse(t *testing.T) {
 }
 
 func TestCollectFans_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/fans": errors.New("connection refused")},
 	}, onlyEnabled(CollectorFans))
 

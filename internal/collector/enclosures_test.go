@@ -30,7 +30,7 @@ func TestCollectEnclosures(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/enclosures": data},
 	}, onlyEnabled(CollectorEnclosures))
 
@@ -104,7 +104,7 @@ me5_enclosure_status{enclosure_id="0"} 1
 }
 
 func TestCollectEnclosures_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/enclosures": errors.New("connection refused")},
 	}, onlyEnabled(CollectorEnclosures))
 

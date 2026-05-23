@@ -30,7 +30,7 @@ func TestCollectSnapshotSpace(t *testing.T) {
 		t.Fatalf("reading fixture: %v", err)
 	}
 
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		responses: map[string][]byte{"/show/snapshot-space": data},
 	}, onlyEnabled(CollectorSnapshotSpace))
 
@@ -51,7 +51,7 @@ me5_snapshot_space_limit_bytes{pool="A",serial="00c0fffa39f700001395066801000000
 }
 
 func TestCollectSnapshotSpace_APIError(t *testing.T) {
-	c := NewME5Collector(&mockClient{
+	c := newTestCollector(&mockClient{
 		errs: map[string]error{"/show/snapshot-space": errors.New("connection refused")},
 	}, onlyEnabled(CollectorSnapshotSpace))
 
