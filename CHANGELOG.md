@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
+## [1.0.4] - 2026-05-23
+
+- Dependency updates.
+
+## [1.0.3] - 2026-03-19
+
+- Deployment fixes.
+
 ## [1.0.2] - 2026-03-19
 
 - GoReleaser fixes.
