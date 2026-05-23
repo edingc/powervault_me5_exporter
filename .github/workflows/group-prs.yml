@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: combine-prs
         id: combine-prs
-        uses: github/combine-prs@v5.2.2
+        uses: github/combine-prs@v5.2.0
         with:
           title: Dependabot combined pull requests
           assignees: edingc
